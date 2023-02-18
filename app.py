@@ -39,14 +39,16 @@ def box():
                 numero = request.form.getlist("numeros")
                 max_value = None
                 for num in numero:
+                    num = int(num)
                     if (max_value is None or num > max_value):
-                        print(num)
+                        
                         max_value = num
 
                 min_value = None
                 for num in numero:
+                    num = int(num)
                     if (min_value is None or num <= min_value):
-                        print(num)
+                        
                         min_value = num
 
                 for i in range(len(numero)):
