@@ -1,0 +1,25 @@
+{%extends "layout.html"%}
+{%block content%}
+
+    <div class="col xs-6">
+        {%from "_macros.html" import render_field %}
+        {%from "_macros.html" import render_input %}
+        <form action="/CajasD" method="post">
+            <div class="form-group">
+                {{render_field(form.nCajas)}}
+            </div>
+            <input type="submit" name="btn" value="Cargar">
+            
+        </form>
+            {% if form.nCajas.data %}
+            <form action="/CajasD" method="POST">
+                    {% for i in range(0, form.nCajas.data) %}
+                    {{ render_input(name="numeros",placeholder="Ingresa un número", type="number") }}
+                    {% endfor %}
+                    <input type="submit" name="btn" value="Datos">
+            </form>
+            {% endif %}
+        
+    </div>
+
+{%endblock%}

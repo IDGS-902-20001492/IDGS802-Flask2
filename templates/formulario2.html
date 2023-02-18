@@ -1,0 +1,26 @@
+{%extends "layout.html"%}
+{%block content%}
+
+{% from "_macros.html" import render_input%}
+
+<form name="form1" method="GET">
+    <div class="control-group">
+        <div class="controls">
+            {render_input("txtMatricula","Aquí va su matricula")}}
+            {{render_input("txtNombre","Aquí va su nombre")}}
+            {{render_input("txtApeP","Apellido Paterno"),text}}
+            {{render_input("txtApeM","Apellido Materno",text)}}
+            {{render_input("txtEmail","Aquí va su correo",type="email")}}
+       
+
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-default btn-primary">
+                        <i class="icon-book icon-white"></i> Calcular
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{%endblock%}

@@ -1,0 +1,16 @@
+{%extends "layout.html"%}
+{%block content%}
+
+<div class="row">
+    <div class="card bg-info col-6" style="font-size: medium;">
+        <label><h4>El número mayor es: {{max_value}}</h4></label>
+        <label><h4>El número menor es: {{min_value}}</h4></label>
+        <label><h4>El promedio es: {{prom}}</h4></label><br>
+        <ul>
+            {{repetidos|safe}}
+        </ul>
+        
+    </div>
+</div>
+
+{%endblock%}

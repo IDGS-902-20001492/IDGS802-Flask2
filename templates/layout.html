@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/boostrap/css/bootstrap.min.css"/>
+    <style>
+        body{
+            padding-top: 0px;
+        }
+        .tr-head{background: #dff0d8;}
+    </style>
+    <link rel="stylesheet" href="../static/boostrap/css/bootstrap-responsive.min.css">
+
+</head>
+<body>
+    <!--
+    <h1>Hola Mundo</h1>
+    <h2>{{titulo}}</h2>
+        
+    {% for item in lista %}
+        <h3>{{item}}</h3>
+
+    {%endfor%}
+    -->
+    <div class="navbar navbar navbar-inverse navbar-fixed top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="#">
+                    UTL-IDGS802
+                </a>
+                <ul class="nav">
+                    <li><a href=""><i class="icon-home icon-white"></i>Inicio</a></li>
+                    <li><a href=""><i class="icon-user icon-white"></i>Usuarios</a></li>
+                    <li><a href=""><i class="icon-user icon-white"></i>Alumnos</a></li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {% block content%}
+        {%endblock%}
+    </div>
+</body>
+</html>
