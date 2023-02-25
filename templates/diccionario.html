@@ -1,0 +1,47 @@
+{% extends "layout.html"%}
+{%block content%}
+<div class="row">
+    <div style="border: 2px black solid; border-radius: 1em; padding: 1em; background-color: aqua;
+            opacity: 90%;">
+        <div class="col xs-6">
+            {%from "_macros.html" import render_field %}
+            <h3>Diccionario: </h3>
+            <form action="" method="post" novalidate>
+            <div class="form-group">
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                {{render_field(dform.ing)}}
+                {{render_field(dform.esp)}}
+                
+                <input class="btn btn-primary" name="btn" type="submit" value="Guardar">
+            </div>
+            </form>
+        </div>
+        <div class="col xs-6">
+            {%from "_macros.html" import render_field %}
+            <form action="" method="post" novalidate>
+                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <div class="form-group">
+               <div class="row">
+                <div class="span-6">
+                    {{render_field(bform.lenguage)}}
+                </div>
+                <div class="span-6">
+                    {{render_field(bform.busqueda)}}
+                           
+                    <div class="form-group">
+                        <div class="controls">
+                            <label for="result">Resultado:</label>
+                            <input name="result" type="text" value="{{resultado}}">
+                        </div>
+                    </div>
+                </div>
+               </div>
+                <input class="btn btn-primary" name="btn" type="submit" value="Buscar">
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{%endblock%}
