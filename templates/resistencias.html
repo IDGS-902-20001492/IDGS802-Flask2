@@ -1,0 +1,37 @@
+{% extends "layout2.html"%}
+{%block content%}
+<br>
+<div class="container">
+    <div class="card bg-info">
+        <div class="row"  style="padding: 15px;">          
+            {%from "_macros.html" import render_field %}
+            <div class="col-5">
+                <img src="../static/img/resistencias.png" width="400px" height="310px">
+            </div>
+            <div class="col-7 card" style="background-color: aqua;">
+                <form action="" method="post" novalidate>
+                    <div class="form-group">
+                        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                        {{render_field(form.banda1)}}
+                        {{render_field(form.banda2)}}
+                        {{render_field(form.banda3)}}
+                        {{render_field(form.banda4)}}
+                        <input class="btn btn-primary" name="btn" type="submit" value="Calcular">
+                    </div>
+                    </form>
+                    
+                    <div class="row">
+                        <table>                            
+                            <thead>
+                                {{thead}}
+                            </thead>
+                            <tbody>
+                                {{tbody}}
+                            </tbody>
+                        </table> 
+                    </div>              
+            </div>   
+        </div>
+    </div>
+</div>
+{%endblock%}

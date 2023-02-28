@@ -1,14 +1,17 @@
 from flask import Flask,render_template
-from flask import request
+from flask import request, redirect
 from collections import Counter
 from flask_wtf import FlaskForm
 from wtforms import validators
 from flask_wtf.csrf import CSRFProtect 
 from flask import make_response
 from flask import flash
+from django.shortcuts import render
+from django.utils.safestring import mark_safe
 import forms
 import cajas
 import diccionario
+import resistencia
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "Esta es mi clave encriptada"
@@ -30,7 +33,7 @@ def before_request():
 
 @app.route("/cookies", methods = ["GET","POST"])
 def cookies():
-    print("numero2")
+    #print("numero2")
     reg_user = forms.LoginForm(request.form)
     response = make_response(render_template('cookies.html',form = reg_user))
     if request.method == 'POST' and reg_user.validate():
@@ -45,7 +48,7 @@ def cookies():
 
 @app.after_request
 def after_request(response):
-    print("numero3")
+  #  print("numero3")
     return response
     
 @app.route("/saludo")
@@ -149,9 +152,10 @@ def dicc():
 
                 palabras = contenido.split('\n')  
                 for coincidencia in palabras:
-                    if busc in coincidencia.lower():
+                    if busc == coincidencia.lower():                        
                         traduccion = palabras[i+1]
-                    
+                    if traduccion == '':
+                        traduccion = 'La palabra no existe'
                     i = i+1
 
 
@@ -161,20 +165,143 @@ def dicc():
              else:
 
                 traduccion = ""
-                i = 0
+                x = 0
                 with open('traduccion.txt', 'r') as archivo:
                  contenido = archivo.read()
-
+                print("Ingles a español")
                 palabras = contenido.split('\n')  
+                print(palabras)
                 for coincidencia in palabras:
-                    if busc in coincidencia:
-                        traduccion = palabras[i-1]
-                   
-                    i = i+1
-                return render_template("diccionario.html",bform = bForm,dform = dForm, resultado = traduccion)
+                    
+                    if busc == coincidencia.lower():                        
+                        traduccion = palabras[x-1]
+                        print(coincidencia)
+                    if traduccion == '':
+                        traduccion = 'La palabra no existe'                                               
+                    x = x+1
+
+             return render_template("diccionario.html",bform = bForm,dform = dForm, resultado = traduccion)
 
         return render_template("diccionario.html",dform = dForm, bform = bForm)
 
+@app.route("/resistencia",methods = ["GET","POST"])
+def resistencias():
+        
+        resisForm = resistencia.resisCampos(request.form)
+        btn = request.form.get('btn')
+        
+        encabezado = request.cookies.get('encabezado')
+        cuerpo = request.cookies.get('cuerpo')
+                                           
+        b1 = ""
+        b2 = ""
+        b3 = ""
+        b4 = ""
+        thead = ""
+        tbody = ""
+        valor = 0
+        min = 0
+        max = 0
+        elementos = []
+
+        color = ""
+        
+        if request.method == 'POST' and resisForm.validate():
+            
+            if btn == 'Calcular':
+                response = make_response(render_template('resistencias.html',form = resisForm,
+                           thead = mark_safe(encabezado),
+                                                 tbody = mark_safe(cuerpo)))
+                response.delete_cookie('encabezado')
+                response.delete_cookie('cuerpo')
+                
+
+                b1 = resisForm.banda1.data
+                b2 = resisForm.banda2.data
+                b3 = resisForm.banda3.data
+                b4 = resisForm.banda4.data
+
+                if b3 == 'nin':
+                    b3 = '1'
+
+                banda12 = str(b1)+str(b2)+""
+                valor = float(banda12)*float(b3)
+
+                if b4 == "0.05":
+                    min = valor - valor*0.05
+                    max = valor + valor*0.05
+                else:
+                    min = valor - valor*0.1
+                    max = valor + valor*0.1    
+
+                if b3 == "nin":
+                    min = valor - valor*.2
+                    max = valor + valor*.2
+
+                elementos = [b1, b2, b3, b4, valor, min, max]
+            
+                thead = "<style>th{border:2px solid black;}</style><th>Banda1</th><th>Banda2</th><th>Banda3</th><th>Banda4</th><th>Valor(Ohms)</th><th>Minimo</th><th>Maximo</th>"
+                tbody = "<style>td{border:2px solid black;}</style><tr>"
+                for temp in elementos:
+                    if temp == '0' or temp == '1.0':
+                        color = '#000000'
+                        tbody += "<td style='background-color: "+color+";'><a style='color:white;'>"+"negro"+"</a></td>"
+                    elif temp == '1' or temp == '10':
+                        color = '#6e5b53'
+                        tbody += "<td style='background-color: "+color+";'>"+"cafe"+"</td>"
+                    elif temp == '2' or temp == '100':
+                        color = '#e71837'
+                        tbody += "<td style='background-color: "+color+";'>"+"rojo"+"</td>"
+                    elif temp == '3' or temp == '1000':
+                        color = '#fc9303'
+                        tbody += "<td style='background-color: "+color+";'>"+"naranja"+"</td>"
+                    elif temp == '4' or temp == '10000':
+                        color = '#fce903'
+                        tbody += "<td style='background-color: "+color+";'>"+"amarillo"+"</td>"
+                    elif temp == '5' or temp == '100000':
+                        color = '#49b675'
+                        tbody += "<td style='background-color: "+color+";'>"+"verde"+"</td>"
+                    elif temp == '6' or temp == '1000000':
+                        color = '#0e4bef'
+                        tbody += "<td style='background-color: "+color+";'>"+"azul"+"</td>"
+                    elif temp == '7' or temp == '10000000':
+                        color = '#c71585'
+                        tbody += "<td style='background-color: "+color+";'>"+"violeta"+"</td>"
+                    elif temp == '8' or temp == '100000000':
+                        color = '#868686' 
+                        tbody += "<td style='background-color: "+color+";'>"+"gris"+"</td>"
+                    elif temp == '9' or temp == '1000000000':
+                        color = '#ffffff'
+                        tbody += "<td style='background-color: "+color+";'>"+"blanco"+"</td>"
+                    elif temp == '0.05' or temp == '00.1':
+                        color = '#cccc33'  
+                        tbody += "<td style='background-color: "+color+";'>"+"dorado"+"</td>"
+                    elif temp == '0.1' or temp == '00.01':
+                        color = '#bfc1c1' 
+                        tbody += "<td style='background-color: "+color+";'>"+"plateado"+"</td>"                                          
+                    else:
+                        tbody += "<td>"+str(temp)+"</td>"
+
+                tbody += "</tr>"
+                thead = mark_safe(thead)
+                tbody = mark_safe(tbody)
+
+                
+                flash("El valor resultante es: "+str(valor))                
+
+                response.set_cookie('encabezado',thead)
+                response.set_cookie('cuerpo',tbody)
+                print(thead+tbody)
+        else:
+            response = make_response(render_template('resistencias.html',form = resisForm,
+                           thead = mark_safe(encabezado),
+                                                 tbody = mark_safe(cuerpo))) 
+            response.delete_cookie('encabezado')
+            response.delete_cookie('cuerpo')
+            
+        return response
+        '''return render_template("resistencias.html",form = resisForm, thead = mark_safe(thead),
+                               tbody = mark_safe(tbody))'''
 
 
 if __name__ == "__main__":

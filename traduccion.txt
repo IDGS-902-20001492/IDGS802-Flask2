@@ -1,6 +1,3 @@
-
-Rojo
-Red
 Conocimiento
 Knowledge
 Amarillo
@@ -27,3 +24,9 @@ uno
 one
 huevo
 egg
+dar
+give
+rojo
+red
+pelota
+ball
